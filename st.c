@@ -30,6 +30,7 @@
 #include "keyboard.h"
 #include "msg_queue.h"
 
+
 #define Glyph Glyph_
 #define Font Font_
 
@@ -2973,6 +2974,8 @@ run(void) {
 
     SDL_KillThread(thread);
 }
+unsigned short int SCREEN_WIDTH = 640;  // Default width
+unsigned short int SCREEN_HEIGHT = 480; // Default height
 
 int
 main(int argc, char *argv[]) {
@@ -3042,6 +3045,26 @@ main(int argc, char *argv[]) {
 		if(atexit(sdlshutdown)) {
 			fprintf(stderr,"Unable to register SDL_Quit atexit\n");
 		}
+
+    // Read environment variables for width and height
+    char *width_env = getenv("DISPLAY_WIDTH");
+    char *height_env = getenv("DISPLAY_HEIGHT");
+
+    if (width_env) {
+        SCREEN_WIDTH = (unsigned short int)atoi(width_env);
+    }
+
+    if (height_env) {
+        SCREEN_HEIGHT = (unsigned short int)atoi(height_env);
+    }
+
+    /* Initialize SDL and create the window */
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+        fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
+        return 1;
+    }
+
+
 		/*
 		char path[PATH_MAX];
 		realpath(dirname(argv[0]), path);

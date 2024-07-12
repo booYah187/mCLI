@@ -1,15 +1,15 @@
 #
-#	Simple Terminal config for RG353P Recalbox
-#		based on RG350 ver https://github.com/jamesofarrell/st-sdl
+#	Simple Terminal config for mCLi
+#		based on RG353 ver https://github.com/leonkasovan/st
 #
 
 # st version
-VERSION = 0.3
+VERSION = 0.3.1
 
 # Customize below to fit your system
 
 # compiler and linker
-CC = /home/ark/recalbox-rg353x/output/host/bin/aarch64-buildroot-linux-gnu-gcc
+CC = /usr/bin/aarch64-linux-gnu-gcc
 SYSROOT = $(shell ${CC} --print-sysroot)
 
 # includes and libs
@@ -18,5 +18,5 @@ LIBS = -lc -L${SYSROOT}/usr/lib -lSDL -lpthread -Wl,-Bstatic,-lutil,-Bdynamic
 
 # flags
 CPPFLAGS = -DVERSION=\"${VERSION}\"
-CFLAGS += -Os -Wall ${INCS} ${CPPFLAGS}
+CFLAGS += -g2 -Os -Wall ${INCS} ${CPPFLAGS}
 LDFLAGS += ${CFLAGS} ${LIBS} -lSDL -s

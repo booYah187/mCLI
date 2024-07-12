@@ -1,8 +1,15 @@
 #include <SDL/SDL.h>
+
 #include "font.h"
+
+
+
 
 #define NUM_ROWS 6
 #define NUM_KEYS 18
+
+
+
 
 #ifdef RG35XX
 //	RG35xx
@@ -21,6 +28,9 @@
 #define KEY_RETURN SDLK_m // START
 #define KEY_ARROW_LEFT	SDLK_j // L2
 #define KEY_ARROW_RIGHT	SDLK_k // R2
+
+
+
 
 #elif MIYOOMINI
 //	miyoomini
@@ -43,6 +53,9 @@
 //#define KEY_ARROW_UP	SDLK_KP_DIVIDE //
 //#define KEY_ARROW_DOWN	SDLK_KP_PERIOD //
 
+
+
+
 #elif TRIMUISMART
 //	TRIMUI smart (same as TRIMUI)
 #define KEY_UP SDLK_UP
@@ -58,6 +71,9 @@
 #define KEY_QUIT SDLK_ESCAPE // MENU
 #define KEY_TAB SDLK_RCTRL // SELECT
 #define KEY_RETURN SDLK_RETURN // START
+
+
+
 
 #elif RG353P
 typedef enum RG353P_ButtonType{
@@ -80,12 +96,18 @@ typedef enum RG353P_ButtonType{
 	RG353P_Button_RIGHT
 } RG353P_ButtonType;
 
+
+
+
 typedef enum RG353P_AxisType{
 	RG353P_Axis_Joystick_Left_Horizontal,
 	RG353P_Axis_Joystick_Left_Vertical,
 	RG353P_Axis_Joystick_Right_Horizontal,
 	RG353P_Axis_Joystick_Right_Vertical,
 } RG353P_AxisType;
+
+
+
 
 #define JOY_UP RG353P_Button_UP
 #define JOY_DOWN RG353P_Button_DOWN
@@ -103,11 +125,23 @@ typedef enum RG353P_AxisType{
 #define JOY_ARROW_LEFT	RG353P_Button_L2 // L2
 #define JOY_ARROW_RIGHT	RG353P_Button_R2 // R2
 
+
+
+
 #endif
+
+
+
 
 #define KMOD_SYNTHETIC (1 << 13)
 
+
+
+
 static int row_length[NUM_ROWS] = {13, 17, 17, 15, 14, 8};
+
+
+
 
 static SDLKey keys[2][NUM_ROWS][NUM_KEYS] = {
 	{
@@ -127,6 +161,9 @@ static SDLKey keys[2][NUM_ROWS][NUM_KEYS] = {
 	}
 };
 
+
+
+
 static char* syms[2][NUM_ROWS][NUM_KEYS] = {
 	{
 		{"esc",   "F1",  "F2",  "F3",    "F4",  "F5",  "F6",   "F7", "F8", "F9", "F10", "F11", "F12", NULL},
@@ -145,7 +182,13 @@ static char* syms[2][NUM_ROWS][NUM_KEYS] = {
 	}
 };
 
+
+
+
 static unsigned char toggled[NUM_ROWS][NUM_KEYS];
+
+
+
 
 static int selected_i = 0, selected_j = 0;
 static int shifted = 0;
@@ -153,6 +196,9 @@ static int location = 0;
 static int mod_state = 0;
 int active = 1;
 int show_help = 1;
+
+
+
 
 void init_keyboard() {
 	for(int j = 0; j < NUM_ROWS; j++)
@@ -162,7 +208,13 @@ void init_keyboard() {
 //	active = 1;
 	mod_state = 0;
 
+
+
+
 }
+
+
+
 
 char* help = 
 "How to use:\n"
@@ -200,19 +252,22 @@ char* help =
 "  rm <f>          remove files (use -rf for dir)\n"
 ;
 
+
+
+
 void draw_keyboard(SDL_Surface* surface) {
-	unsigned short bg_color = SDL_MapRGB(surface->format, 64, 64, 64);
-	unsigned short key_color = SDL_MapRGB(surface->format, 128, 128, 128);
+	unsigned short bg_color = SDL_MapRGB(surface->format, 0, 0, 0 );
+	unsigned short key_color = SDL_MapRGB(surface->format, 68, 71, 90);
 	unsigned short text_color = SDL_MapRGB(surface->format, 0, 0, 0);
-	unsigned short sel_color = SDL_MapRGB(surface->format, 128, 255, 128);
-	unsigned short sel_toggled_color = SDL_MapRGB(surface->format, 255, 255, 128);
-	unsigned short toggled_color = SDL_MapRGB(surface->format, 192, 192, 0);
+	unsigned short sel_color = SDL_MapRGB(surface->format, 100, 100, 255);
+	unsigned short sel_toggled_color = SDL_MapRGB(surface->format, 196, 5, 82);
+	unsigned short toggled_color = SDL_MapRGB(surface->format, 0, 255, 0);
 	if(show_help) {
 		SDL_FillRect(surface, NULL, text_color);
 #ifdef RG353P
-		draw_string(surface, "SDL(1.2) Terminal for RG353P", 0, 10, sel_toggled_color);
+		draw_string(surface, "mCLI", 0, 10, sel_toggled_color);
 #else		
-		draw_string(surface, "SDL Terminal by Benob, based on st-sdl", 0, 10, sel_toggled_color);
+		draw_string(surface, "SDL Terminal by mattyj513, based on st-sdl", 0, 10, sel_toggled_color);
 #endif		
 		draw_string(surface, help, 8, 30, sel_color);
 		return;
@@ -226,10 +281,16 @@ void draw_keyboard(SDL_Surface* surface) {
 	int x = center_x, y = surface->h - 8 * (NUM_ROWS) - 16;
 	if(location == 1) y = 16;
 
+
+
+
 	SDL_Rect rect = {x - 4, y - 3, total_length + 3, NUM_ROWS * 8 + 3};
 	SDL_FillRect(surface, &rect, bg_color);
 
-	for(int j = 0; j < NUM_ROWS; j++) {
+
+
+
+  	for(int j = 0; j < NUM_ROWS; j++) {
 		x = center_x;
 		for(int i = 0; i < row_length[j]; i++) {
 			int length = strlen(syms[shifted][j][i]);
@@ -252,7 +313,13 @@ void draw_keyboard(SDL_Surface* surface) {
 	}
 }
 
+
+
+
 enum { STATE_TYPED, STATE_UP, STATE_DOWN };
+
+
+
 
 void update_modstate(int key, int state) {
 	//SDLMod mod_state = SDL_GetModState();
@@ -284,6 +351,9 @@ void update_modstate(int key, int state) {
 	SDL_SetModState(mod_state);
 }
 
+
+
+
 void simulate_key(int key, int state) {
 	update_modstate(key, state);
 	unsigned short unicode = 0;
@@ -314,12 +384,18 @@ void simulate_key(int key, int state) {
 	//printf("%d\n", key);
 }
 
+
+
+
 int compute_visual_offset(int col, int row) {
 	int sum = 0;
 	for(int i = 0; i < col; i++) sum += 1 + strlen(syms[0][row][i]);
 	sum += (1 + strlen(syms[0][row][col])) / 2;
 	return sum;
 }
+
+
+
 
 int compute_new_col(int visual_offset, int old_row, int new_row) {
 	int new_sum = 0;
@@ -331,6 +407,9 @@ int compute_new_col(int visual_offset, int old_row, int new_row) {
 	return new_col;
 }
 
+
+
+
 #ifndef RG353P
 int handle_keyboard_event(SDL_Event* event) {
 	static int visual_offset = 0;
@@ -340,6 +419,9 @@ int handle_keyboard_event(SDL_Event* event) {
 	}
 	if(!active) return 0;
 	if((event->key.type == SDL_KEYUP || event->key.type == SDL_KEYDOWN) && event->key.keysym.mod & KMOD_SYNTHETIC) return 0;
+
+
+
 
 	if(event->key.type == SDL_KEYDOWN && event->key.state == SDL_PRESSED) {
 		if(show_help) {
@@ -411,8 +493,14 @@ int handle_keyboard_event(SDL_Event* event) {
 }
 #endif
 
+
+
+
 int handle_joystick_event(SDL_Event* event) {
 	static int visual_offset = 0;
+
+
+
 
 #ifdef RG353P
 	if(event->type == SDL_JOYAXISMOTION) { // not yet work
@@ -434,6 +522,9 @@ int handle_joystick_event(SDL_Event* event) {
 		return 1;
 	}
 	if(!active) return 0;
+
+
+
 
 	if(event->type == SDL_JOYBUTTONDOWN && event->jbutton.state == 1) {
 		if(show_help) {
@@ -500,7 +591,13 @@ int handle_joystick_event(SDL_Event* event) {
 	return 1;
 }
 
+
+
+
 #ifdef TEST_KEYBOARD
+
+
+
 
 int main() {
 	SDL_Init( SDL_INIT_EVERYTHING );
@@ -532,4 +629,17 @@ int main() {
 	SDL_Quit();
 }
 
+
+
+
 #endif
+
+
+
+
+
+
+
+
+
+
