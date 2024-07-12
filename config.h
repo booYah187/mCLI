@@ -1,5 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
+
+
 /* appearance */
 #define USE_ANTIALIASING
 //static char font[] = "fonts/LiberationMono-Regular.ttf:fonts/LiberationMono-Bold.ttf";
@@ -13,53 +15,78 @@ static int initial_width = 320;
 static int initial_height = 240;
 static char shell[] = "/bin/sh";
 
+
 /* double-click timeout (in milliseconds) between clicks for selection */
 static unsigned int doubleclicktimeout = 300;
 static unsigned int tripleclicktimeout = 600;
 
+
 /* TERM value */
 static char termname[] = "xterm";
+
 
 static unsigned int tabspaces = 4;
 #define WORD_BREAK " "
 
+
 /* Terminal colors (16 first used in escape sequence) */
+
 SDL_Color colormap[] = {
-	/* 8 normal colors */
-	{   0,   0,   0, 0 },//black
-	{ 128,   0,   0, 0 },//"red3",
-	{   0, 128,   0, 0 },//"green3",
-	{ 128, 128,   0, 0 },//"yellow3",
-	{   0,   0, 128, 0 },//"blue2",
-	{ 128,   0, 128, 0 },//"magenta3",
-	{   0, 128, 128, 0 },//"cyan3",
-	{ 192, 192, 192, 0 },//"gray90",
+    /* 8 normal colors */
+    {   0,   0,   0, 0 },  // black
+    { 255,  85,  85, 0 },  // "red3"
+    {  80, 250, 123, 0 },  // "green3"
+    { 241, 250, 140, 0 },  // "yellow3"
+    { 189, 147, 249, 0 },  // "blue2"
+    { 255, 121, 198, 0 },  // "magenta3"
+    { 139, 233, 253, 0 },  // "cyan3"
+    { 187, 187, 187, 0 },  // "gray90"
 
-	/* 8 bright colors */
-	{ 128, 128, 128, 0}, //"gray50",
-	{ 255,   0,   0, 0 },//red
-	{   0, 255,   0, 0 },//green
-	{ 255, 255,   0, 0 },//"yellow",
-	{   0,   0, 255, 0 },//"#0000ff",
-	{ 255,   0, 255, 0 },//"magenta",
-	{   0, 255, 255, 0 },//"cyan",
-	{ 255, 255, 255, 0 },//"white",
 
-	[255] = { 0, 0, 0, 0 },
+    /* 8 bright colors */
+    {  68,  71,  90, 0 },  // "gray50"
+    { 255,  85,  85, 0 },  // red
+    {  80, 250, 123, 0 },  // green
+    { 241, 250, 140, 0 },  // "yellow"
+    { 189, 147, 249, 0 },  // "#0000ff"
+    { 255, 121, 198, 0 },  // "magenta"
+    { 139, 233, 253, 0 },  // "cyan"
+    { 255, 255, 255, 0 },  // "white"
 
-	/* more colors can be added after 255 to use with DefaultXX */
-	{ 204, 204, 204, 0},
-	{  51,  51,  51, 0},
+
+    [255] = { 0, 0, 0, 0 },
+
+
+    /* more colors can be added after 255 to use with DefaultXX */
+    {  40,  42,  54, 0 },
+    { 248, 248, 242, 0 },
 };
+
+
+
 
 /*
  * Default colors (colorname index)
  * foreground, background, cursor, unfocused cursor
  */
-static unsigned int defaultfg = 7;
-static unsigned int defaultbg = 0;
-static unsigned int defaultcs = 256;
+static unsigned int defaultfg = 257;
+static unsigned int defaultbg = 256;
+static unsigned int defaultcs = 257;
 static unsigned int defaultucs = 257;
+/*
+ * Colors used, when the specific fg == defaultfg. So in reverse mode this
+ * will reverse too. Another logic would only make the simple feature too
+ * complex.
+ */
+unsigned int defaultitalic = 7;
+unsigned int defaultunderline = 7;
+
+
+/*
+  * Default shape of cursor
+  * 2: Block ("â–ˆ")
+  * 4: Underline ("_")
+
 
 /*
  * Special keys (change & recompile st.info accordingly)
@@ -70,10 +97,12 @@ static unsigned int defaultucs = 257;
  * * Use XK_NO_MOD to match the key alone (no modifiers)
  */
 
+
 /* key, mask, output */
 static Key key[] = {
 	{ SDLK_LEFT,      KMOD_ALT,  "\033[1;3D" },
 	{ SDLK_RIGHT,     KMOD_ALT,  "\033[1;3C" },
+
 
 	{ SDLK_BACKSPACE, 0, "\177" },
 	{ SDLK_INSERT,    0, "\033[2~" },
@@ -96,12 +125,15 @@ static Key key[] = {
 	{ SDLK_F12,       0, "\033[24~" },
 };
 
+
 /* Internal shortcuts. */
 #define MODKEY KMOD_ALT
+
 
 static Shortcut shortcuts[] = {
 	/* modifier		key		function	argument */
 	{ MODKEY|KMOD_SHIFT,	SDLK_PAGEUP,	xzoom,		{.i = +1} },
 	{ MODKEY|KMOD_SHIFT,	SDLK_PAGEDOWN,	xzoom,		{.i = -1} },
 };
+
 
