@@ -1,10 +1,14 @@
-# st
-Simple terminal for handheld: RG353P RG35XX
+# mCLI
 
-`git clone https://github.com/leonkasovan/st.git`  
-Select handheld config: `nano Makefile`  
-```Makefile
-include config-RG353P.mk
-include config-RG35XX.mk
-```
+Simple terminal for PortMaster for retro handhelds:
+
+<img src="https://github.com/booYah187/mCLI/blob/main/mcli.gif?raw=true" alt="alt text" width="300" height="300" />
+
+
+compile:
+
+`git clone https://github.com/booYah187/mCLI.git`
+
+`cd mCLI`
+
 `make`  
