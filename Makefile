@@ -1,16 +1,16 @@
-# st - simple terminal
+# mcli - simple terminal
 # See LICENSE file for copyright and license details.
 
 include config-RG353P.mk
 #include config-RG35XX.mk
 
-SRC = st.c keyboard.c font.c msg_queue.c
+SRC = mcli.c keyboard.c font.c msg_queue.c
 OBJ = ${SRC:.c=.o}
 
-all: options st 
+all: options mcli
 
 options:
-	@echo st build options:
+	@echo mcli build options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
@@ -19,12 +19,12 @@ options:
 	@echo $(CC) $<
 	@${CC} -c ${CFLAGS} $<
 
-st: ${OBJ}
+mcli: ${OBJ}
 	@echo $(CC) -o $@
 	@${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
 	@echo cleaning
-	@rm -f st ${OBJ}
+	@rm -f mcli ${OBJ}
 
 .PHONY: all options clean
